@@ -20,10 +20,6 @@ spec:
             memory: 4Gi
         devices:
           disks:
-            - name: boot-iso
-              cdrom:
-                bus: sata
-              bootOrder: 1
             - name: rootdisk
               disk:
                 bus: virtio
@@ -35,9 +31,6 @@ spec:
         - name: rootdisk
           dataVolume:
             name: base-vm-disk
-        - name: boot-iso
-          persistentVolumeClaim:
-            claimName: rhel9-iso
         - name: cloudinitdisk
           cloudInitNoCloud:
             userData: |
