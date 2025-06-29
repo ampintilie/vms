@@ -1,0 +1,17 @@
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: base-vm-disk
+spec:
+  source:
+    pvc:
+      name: rhel9-iso
+      namespace: my-vms
+  pvc:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 30Gi
+    storageClassName: ocs-storagecluster-ceph-rbd
+

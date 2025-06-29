@@ -1,0 +1,51 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: base-vm
+  namespace: my-vms
+spec:
+  running: true
+  template:
+    metadata:
+      labels:
+        kubevirt.io/domain: base-vm
+    spec:
+      domain:
+        cpu:
+          cores: 2
+        memory:
+          guest: 4Gi
+        resources:
+          requests:
+            memory: 4Gi
+        devices:
+          disks:
+            - name: rootdisk
+              disk:
+                bus: virtio
+            - name: boot-iso
+              cdrom:
+                bus: sata
+            - name: cloudinitdisk
+              disk:
+                bus: virtio
+      volumes:
+        - name: rootdisk
+          dataVolume:
+            name: base-vm-disk
+        - name: boot-iso
+          persistentVolumeClaim:
+            claimName: rhel9-iso
+        - name: cloudinitdisk
+          cloudInitNoCloud:
+            userData: |
+              #cloud-config
+              hostname: base-vm
+              users:
+                - name: cloud
+                  groups: wheel
+                  ssh-authorized-keys:
+                    - ssh-rsa AAAAB3...your-public-key
+              runcmd:
+                - echo "Cloud-init finished."
+
