@@ -4,9 +4,7 @@ metadata:
   name: base-vm-disk
 spec:
   source:
-    pvc:
-      name: rhel9-iso
-      namespace: my-vms
+    blank: {}
   pvc:
     accessModes:
       - ReadWriteOnce
