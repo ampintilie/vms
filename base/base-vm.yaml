@@ -23,9 +23,11 @@ spec:
             - name: rootdisk
               disk:
                 bus: virtio
+                bootOrder: 2
             - name: boot-iso
               cdrom:
                 bus: sata
+                bootOrder: 1
             - name: cloudinitdisk
               disk:
                 bus: virtio

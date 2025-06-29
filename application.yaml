@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vm-base
+  namespace: openshift-gitops
+spec:
+  project: default
+  source:
+    repoURL: 'git@github.com:ampintilie/vms.git'  # your git repo SSH or HTTPS URL
+    targetRevision: main  # branch or tag
+    path: base            # path inside repo where manifests are
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: my-vms    # namespace where VM should be created
+  syncPolicy:
+    automated:
+      prune: true        # deletes resources removed from git
+      selfHeal: true     # fixes drift automatically
+
