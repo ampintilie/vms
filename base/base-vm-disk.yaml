@@ -8,7 +8,7 @@ spec:
       url: "docker://registry.redhat.io/rhel8/rhel-guest-image:latest"
   pvc:
     accessModes:
-      - ReadWriteMany
+      - ReadWriteOnce
     resources:
       requests:
         storage: 30Gi
