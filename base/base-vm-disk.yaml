@@ -6,9 +6,7 @@ spec:
   source:
     registry:
       url: "docker://registry.redhat.io/rhel8/rhel-guest-image:latest"
-  sourceRef:
-    registry:
-      imagePullSecretRef:
+      pullSecret:
         name: redhat-registry-secret
   pvc:
     accessModes:
