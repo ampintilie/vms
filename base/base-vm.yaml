@@ -2,9 +2,8 @@ apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
   name: base-vm
-  namespace: my-vms
 spec:
-  running: true
+  running: false
   template:
     metadata:
       labels:
@@ -14,10 +13,10 @@ spec:
         cpu:
           cores: 2
         memory:
-          guest: 4Gi
+          guest: 2Gi
         resources:
           requests:
-            memory: 4Gi
+            memory: 2Gi
         devices:
           disks:
             - name: rootdisk
@@ -41,6 +40,8 @@ spec:
                   groups: wheel
                   ssh-authorized-keys:
                     - ssh-rsa AAAAB3...your-public-key
+                  password: redhat
+                  chpasswd: { expire: False }
               runcmd:
                 - echo "Cloud-init finished."
 
