@@ -45,4 +45,6 @@ spec:
                   chpasswd: { expire: False }
               runcmd:
                 - echo "Cloud-init finished."
+              user: cloud
+              password: redhat
 
