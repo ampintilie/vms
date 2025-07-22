@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ssh-keygen
+  namespace: default
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  template:
+    spec:
+      containers:
+        - name: keygen
+          image: registry.redhat.io/openshift4/ose-cli:latest
+          imagePullSecrets:
+            - name: redhat-registry-secret
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              # Generate SSH key pair
+              ssh-keygen -t rsa -b 2048 -f /tmp/id_rsa -N "" || true
+              
+              # Create SSH private key secret
+              oc create secret generic rhel-vm-ssh-key \
+                --from-file=ssh-privatekey=/tmp/id_rsa \
+                --type=kubernetes.io/ssh-auth \
+                --dry-run=client -o yaml | oc apply -f -
+              
+              # Read public key
+              PUB_KEY=$(cat /tmp/id_rsa.pub)
+              
+              # Create configmap with public key
+              oc create configmap rhel-vm-ssh-pubkey \
+                --from-literal=key="$PUB_KEY" \
+                --dry-run=client -o yaml | oc apply -f -
+          volumeMounts: []
+      restartPolicy: OnFailure
+      serviceAccountName: openshift-gitops-argocd-application-controller
