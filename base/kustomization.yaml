@@ -1,3 +1,4 @@
 resources:
-  - base-vm.yaml
+  - ssh-keygen-job.yaml
   - base-vm-disk.yaml
+  - base-vm.yaml
