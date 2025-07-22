@@ -1,37 +1,42 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: ssh-keygen
+  name: ssh-keygen-job
   namespace: default
-  annotations:
-    argocd.argoproj.io/hook: PreSync
-    argocd.argoproj.io/hook-delete-policy: HookSucceeded
 spec:
   template:
     spec:
+      restartPolicy: Never
+      volumes:
+      - name: shared-data
+        emptyDir: {}
       containers:
-        - name: keygen
-          image: registry.redhat.io/openshift4/ose-cli:latest
-          imagePullSecrets:
-            - name: redhat-registry-secret
-          command: ["/bin/sh", "-c"]
-          args:
-            - |
-              # Generate SSH key pair
-              ssh-keygen -t rsa -b 2048 -f /tmp/id_rsa -N "" || true
-              
-              # Create SSH private key secret
-              oc create secret generic rhel-vm-ssh-key \
-                --from-file=ssh-privatekey=/tmp/id_rsa \
-                --type=kubernetes.io/ssh-auth \
-                --dry-run=client -o yaml | oc apply -f -
-              
-              # Read public key
-              PUB_KEY=$(cat /tmp/id_rsa.pub)
-              
-              # Create configmap with public key
-              oc create configmap rhel-vm-ssh-pubkey \
-                --from-literal=key="$PUB_KEY" \
-                --dry-run=client -o yaml | oc apply -f -
-          volumeMounts: []
-      restartPolicy: OnFailure
+      - name: keygen
+        image: bitnami/openssh-client:latest
+        command:
+          - /bin/sh
+          - -c
+          - |
+            ssh-keygen -t rsa -b 2048 -f /shared/id_rsa -N "" && \
+            echo "SSH key generated"
+        volumeMounts:
+          - mountPath: /shared
+            name: shared-data
+
+      - name: oc-runner
+        image: registry.redhat.io/openshift4/ose-cli:latest
+        command:
+          - /bin/sh
+          - -c
+          - |
+            # Wait until the SSH key is generated
+            while [ ! -f /shared/id_rsa ]; do echo "Waiting for SSH key..."; sleep 2; done
+            # Create Secret with private key
+            oc create secret generic rhel-vm-ssh-key --from-file=ssh-privatekey=/shared/id_rsa --dry-run=client -o yaml | oc apply -f -
+            # Create ConfigMap with public key
+            PUB_KEY=$(cat /shared/id_rsa.pub)
+            oc create configmap rhel-vm-ssh-pubkey --from-literal=key="$PUB_KEY" --dry-run=client -o yaml | oc apply -f -
+            echo "Secret and ConfigMap created"
+        volumeMounts:
+          - mountPath: /shared
+            name: shared-data
