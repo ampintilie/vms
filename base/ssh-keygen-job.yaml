@@ -35,4 +35,3 @@ spec:
                 --dry-run=client -o yaml | oc apply -f -
           volumeMounts: []
       restartPolicy: OnFailure
-      serviceAccountName: openshift-gitops-argocd-application-controller
