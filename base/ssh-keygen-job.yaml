@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: ssh-keygen
+  name: ssh-keygen-job
   namespace: default
   labels:
     argocd.argoproj.io/hook: PreSync
