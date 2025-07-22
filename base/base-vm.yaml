@@ -35,14 +35,12 @@ spec:
             userData: |
               #cloud-config
               hostname: base-vm
-              users:
-                - name: cloud
-                  groups: wheel, sudo
-                  ssh-authorized-keys:
-                    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCcZbdLr0badPq6RF1yHo2DkfbXfftVP4FwqJ1ees68DYWXEsxqzjAiQQtwmgter4txmNvlSNgNuhRc4bnLPMZHR/zOnGihc/kSoLFGis7u1vukCOQDa34Xc+VwBIEDVRSz0ImFRS2bBE/bzHaxmRTQUcrP3gH53mB48nRAKl51baOZT9b3wmnzbLgK0Uoef9LouRtJIE9IR8fnfk268onF9UCS8qbfTnsRiTKZJbW5ne2xzSpj2YH6+UEtJlWimOTLF2nMY0acuvuS1mOyLUiouI0LLR3PZyFPecibu0tgdlT+jQIU0EGGfJE8pL8EZCB+E4AVUbCnBZY2G3tZ1l/UcFGdoZLjBfaxOawincccQTu4CfmZnwsomO6kRiUTqyckTd3IRuDTqJS71hB66ToUuJNiwPid+/XTwc2MY1FMI8HFD5ch9PYCmxt3uJplZp0GuFrhNZNAkPdRmHfbRlZAO9nwXv0aGdCotSrA71L+d7fCNo3UkF5jggm39XN+910=
-                  password: $6$rounds=4096$WEd6d2HvN7R1pSnY$D4i5OanLqCk/JsR4VXk6pxUm8BvZ8uC9IDrjz7aJ7xl8SE0w0yAvnQ0I6nQkTzICZkX0qnLj85WEMI.JOC6J9L0
-                  lock_passwd: false
-                  chpasswd: { expire: False }
+              user: cloud
+              password: $6$rounds=4096$WEd6d2HvN7R1pSnY$D4i5OanLqCk/JsR4VXk6pxUm8BvZ8uC9IDrjz7aJ7xl8SE0w0yAvnQ0I6nQkTzICZkX0qnLj85WEMI.JOC6J9L0
+              chpasswd: {expire: False}
+              lock_passwd: false
+              ssh-authorized-keys:
+                - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCcZbdLr0badPq6RF1yHo2DkfbXfftVP4FwqJ1ees68DYWXEsxqzjAiQQtwmgter4txmNvlSNgNuhRc4bnLPMZHR/zOnGihc/kSoLFGis7u1vukCOQDa34Xc+VwBIEDVRSz0ImFRS2bBE/bzHaxmRTQUcrP3gH53mB48nRAKl51baOZT9b3wmnzbLgK0Uoef9LouRtJIE9IR8fnfk268onF9UCS8qbfTnsRiTKZJbW5ne2xzSpj2YH6+UEtJlWimOTLF2nMY0acuvuS1mOyLUiouI0LLR3PZyFPecibu0tgdlT+jQIU0EGGfJE8pL8EZCB+E4AVUbCnBZY2G3tZ1l/UcFGdoZLjBfaxOawincccQTu4CfmZnwsomO6kRiUTqyckTd3IRuDTqJS71hB66ToUuJNiwPid+/XTwc2MY1FMI8HFD5ch9PYCmxt3uJplZp0GuFrhNZNAkPdRmHfbRlZAO9nwXv0aGdCotSrA71L+d7fCNo3UkF5jggm39XN+910=
               runcmd:
                 - echo "Cloud-init finished."
 
