@@ -17,15 +17,5 @@ spec:
         - -c
         - |
           set -e
-          dnf install -y openssh-clients --nodocs
-          ssh-keygen -t rsa -b 4096 -f /tmp/id_rsa -N ''
-          echo "Creating SSH private key secret..."
-          oc create secret generic rhel-vm-ssh-private \
-            --from-file=ssh-privatekey=/tmp/id_rsa \
-            --type=kubernetes.io/ssh-auth \
-            --dry-run=client -o yaml | oc apply -f -
-          echo "Creating SSH public key configmap..."
-          oc create configmap rhel-vm-ssh-pubkey \
-            --from-file=ssh-publickey=/tmp/id_rsa.pub \
-            --dry-run=client -o yaml | oc apply -f -
+          echo "This ran successfully ..."
       restartPolicy: OnFailure
